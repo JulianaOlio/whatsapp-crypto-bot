@@ -8,12 +8,18 @@ import { join } from 'path';
 import { UserModule } from './user/user.module';
 import { PricesModule } from './prices/prices.module';
 import { OrdersModule } from './orders/orders.module';
+import { QrCodeController } from "./qr-code/qr-code.controller";
+import { WebhookController } from "./webhook/webhook.controller";
+import { HttpModule } from '@nestjs/axios';
+import { QrCodeModule } from './qr-code/qr-code.module';
+import { WebhookModule } from './webhook/webhook.module';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule , HttpModule, QrCodeModule] ,
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         type: 'mysql',
@@ -29,9 +35,11 @@ import { OrdersModule } from './orders/orders.module';
     WhatsappModule,
     UserModule,
     PricesModule,
-    OrdersModule
+    OrdersModule,
+    QrCodeModule,
+    WebhookModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, QrCodeController, WebhookController],
   providers: [AppService],
 })
 export class AppModule {}
